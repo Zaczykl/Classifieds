@@ -1,0 +1,240 @@
+﻿@model Classifieds.Core.ViewModels.CreateClassifiedViewModel
+@{
+    ViewData["Title"] = "Dodaj ogłoszenie";
+}
+
+<h1 class="mb-3">Dodaj ogłoszenie</h1>
+
+@using (Html.BeginForm("Create", "Classified", FormMethod.Post, new { @enctype = "multipart/form-data"}))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <div class="container bg-light mb-3">
+        <div class="form-group p-3 col-lg-9">
+            @Html.LabelFor(x => x.Classified.Title)
+            @Html.TextBoxFor(x=>x.Classified.Title,new {@class="form-control",autofocus="autofocus",placeholder="Należy podać tytuł ogłoszenia",required="required",minLength=Model.Classified.TitleMinLength,maxlength=Model.Classified.TitleMaxLength})
+        </div>        
+    </div>
+    <div class="container bg-light mb-3">
+        <div id="alertFilesExcess" class="d-none">
+            <div class="alert alert-danger p-3">
+                Maksymalnie można dodać tylko 5 plików.
+            </div>
+        </div>
+        <div id="alertFileType" class="d-none">
+            <div class="alert alert-danger p-3">
+                Niepoprawny typ pliku. Tylko jpeg, jpg, png są dozwolone.
+            </div>
+        </div>
+        <div id="alertFileSize" class="d-none">
+            <div class="alert alert-danger">
+                Maksymalny rozmiar pojedynczego pliku to 200kb. Proszę zmniejsz rozmiar plików.
+            </div>
+        </div>
+        <div id="alertEmptyThumbnail" class="d-none">
+            <div class="alert alert-danger">
+                Należy dodać miniaturkę.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group p-3 col">
+                    <label for="thumbnailInput" class="custom-file-upload">
+                        <i class="fa fa-cloud-upload fa-bounce" id="labelForThumbnail" aria-hidden="true"></i> Dodaj miniaturkę
+                    </label>
+                    @Html.TextBoxFor(x => x.File, new { @class = "form-control", type = "file", id="thumbnailInput", accept="image/*", required="required", onchange="previewThumbnail();"})                    
+                </div>
+                <div class="form-group p-3 col">
+                    <label for="otherProductImagesInput" class="custom-file-upload">
+                        <i class="fa fa-cloud-upload" id="labelUploadInput" aria-hidden="true"></i> Dodaj do 5 zdjęć przedmiotu
+                    </label>
+                    @Html.TextBoxFor(x => x.Files, new { @class = "form-control", type = "file",multiple="multiple", id="otherProductImagesInput", accept="image/*", onchange="addOtherImages();"})
+                    <ul id="ProductImageNames"></ul>
+                </div>            
+                <div class="form-group p-3 col">
+                    @Html.LabelFor(x => x.Classified.CategoryId)
+                    @Html.DropDownListFor(x => x.Classified.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "--Wybierz kategorię--", new { @class = "form-control",required="required" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex justify-content-center align-items-center p-3">
+                    <img id="previewImage" height="300" style="display: none;max-width: 90%;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container bg-light mb-3">
+        <div class="form-group p-3">
+            @Html.LabelFor(x => x.Classified.Description)
+            @Html.TextAreaFor(x=>x.Classified.Description,10,10, new { @class = "form-control", required="required", minlength=Model.Classified.DescriptionMinLength,maxLength=Model.Classified.DescriptionMaxLength})
+        </div>
+        <div class="row p-3">
+            <div class="form-group p-3 col-sm-3">
+                @Html.LabelFor(x => x.Classified.Price)
+                @Html.TextBoxFor(x => x.FormattedPrice, new { @class="form-control",type="number",step="0.5",id="priceTextbox",placeholder="Cena w zł",min="1",required="required"})
+            </div>
+            <div class="form-group p-3 col-sm-3">
+                @Html.LabelFor(x=>x.ContactNumber)
+                @Html.TextBoxFor(x => x.ContactNumber, new { @class="form-control",type="text",minlength="9",maxlength="9",pattern="[0-9]{9}", id="contactNumberTextbox" ,placeholder="dokładnie 9 cyfr",required="required"})
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <button type="submit" onclick="validateImage()" class="btn btn-primary btn-lg mt-5 mb-5">
+            Dodaj
+        </button>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">        
+
+        const maxFileSize=200*1024;
+        const maxNumberOfProductImages=5;
+        const allowedExtensions = ['jpeg', 'jpg', 'png'];
+        const thumbnailInput = document.getElementById('thumbnailInput');
+        const otherImagesInput = document.getElementById("otherProductImagesInput");
+        const previewImage = document.getElementById('previewImage');
+        const priceInput = document.getElementById("priceTextbox");
+        const ProductImageNames = document.getElementById('ProductImageNames');  
+        
+
+        function previewThumbnail() 
+        {            
+            var file = thumbnailInput.files[0];
+            var reader = new FileReader();
+            var fileExtension = file.name.split('.').pop().toLowerCase();
+            
+            checkIfUserClickedCancel();
+
+            if (!validateExtension(fileExtension, thumbnailInput)) {
+                previewImage.src = "";
+                return;
+            }
+
+            if(!validateMaxFileSize(file, thumbnailInput)) {
+                previewImage.src = "";
+                return;
+            }  
+            
+            if (file)
+                reader.readAsDataURL(file);
+            else
+                previewImage.src = "";
+
+            reader.onloadend = function () {
+                previewImage.src = reader.result;
+                previewImage.style.display = 'block';
+                $('#alertEmptyThumbnail').attr("class", "d-none");                
+                $('#labelForThumbnail').removeClass("fa-bounce");
+                if (otherImagesInput.files.length == 0) {
+                    $('#labelUploadInput').addClass("fa-bounce");
+                }                           
+            }
+        }
+
+        function addOtherImages() {
+            var files = otherImagesInput.files;
+            var fileExtension;
+            var invalidFiles = Array.prototype.filter.call(files, file => 
+            {
+                if (files.length > maxNumberOfProductImages) {
+                    $('#alertFilesExcess').attr("class", "d-block p-2");
+                    otherImagesInput.value = "";
+                    return;
+                }
+
+                fileExtension = file.name.split('.').pop().toLowerCase();
+                if (!validateExtension(fileExtension, otherImagesInput))
+                    return;
+
+                if (!validateMaxFileSize(file, thumbnailInput))
+                    return;                                            
+            });            
+            displayProductImageNames(otherImagesInput);
+            $("#labelUploadInput").removeClass("fa-bounce");
+        }
+
+        function displayProductImageNames(input) {            
+            ProductImageNames.innerHTML = '';
+            var files = input.files
+            for (let i = 0; i < files.length; i++) {
+                let file = files.item(i)
+                let el = document.createElement('li');
+                el.innerText = file.name;
+                ProductImageNames.appendChild(el);
+            }
+        }
+
+        function showEmptyThumbnailAlert() {
+            $('#alertEmptyThumbnail').attr("class", "d-block p-2");
+            $('#labelUploadInput').removeClass("fa-bounce");
+            $('#labelForThumbnail').addClass("fa-bounce");
+        }        
+
+        function checkIfUserClickedCancel() {
+            thumbnailInput.addEventListener("change", function (event) {
+                if (!event.target.files.length) {
+                    thumbnailInput.value = "";
+                    preview.src = "";
+                    showEmptyThumbnailAlert();
+                    return;
+                }
+            });
+        }
+
+        function validateExtension(fileExtension, input) {
+            if (!allowedExtensions.includes(fileExtension)) {
+                $('#alertFileType').attr("class", "d-block p-2");
+                input.value = "";                
+                return false;
+            }
+            else {
+                $('#alertFileType').attr("class", "d-none");
+                return true;
+            }
+        }
+
+        function validateMaxFileSize(file, input) {
+            if (file.size > maxFileSize) {
+                $('#alertFileSize').attr("class", "d-block p-2");
+                input.value = "";
+                return false;
+            }
+            else {
+                $('#alertFileSize').attr("class", "d-none");
+                return true;
+            }
+        }
+
+        function validateImage() {
+            if (!thumbnailInput.value) {
+                $('#alertEmptyThumbnail').attr("class", "d-block p-2");
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'slow');
+            }
+            else {
+                $('#alertEmptyThumbnail').attr("class", "d-none");
+            }
+        };
+        
+        //prevent entering wrong phone number format
+        document.getElementById("contactNumberTextbox").oninput = function () {
+            this.value = this.value.replace(/[^\d]/g, '');
+        };
+
+        //prevent entering wrong price format
+        priceInput.addEventListener("input", function () {
+            if (this.value.indexOf(".") !== -1) {
+                var parts = this.value.split(".");
+                if (parts[1].length > 2) {
+                    this.value = parts[0] + "." + parts[1].substr(0, 2);
+                }
+            }
+        });
+
+    </script>
+}

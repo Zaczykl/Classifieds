@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Classifieds.Core.Models.Domains.Category>
+
+<div class="text-center mt-5">
+    <h1>Kategorie</h1>
+</div>
+<div class="container d-flex justify-content-around mt-3">
+
+    <div class="rounded-circle text-center">
+        <a href="">
+            <img src="Images/Categories/Board.png" height="100">
+            <p>@Model.Single(x=>x.Id==1).Name</p>
+        </a>
+    </div>
+
+    <div class="rounded-circle text-center">
+        <a href="">
+            <img src="Images/Categories/RPG.png" height="100">
+            <p>@Model.Single(x=>x.Id==2).Name</p>
+        </a>
+    </div>
+
+    <div class="rounded-circle text-center">
+        <a href="">
+            <img src="Images/Categories/Card.png" height="100">
+            <p>@Model.Single(x=>x.Id==3).Name</p>
+        </a>
+    </div>
+
+    <div class="rounded-circle text-center">
+        <a href="">
+            <img src="Images/Categories/Kids.png" height="100">
+            <p>@Model.Single(x=>x.Id==5).Name</p>
+        </a>
+    </div>
+
+    <div class="rounded-circle text-center">
+        <a href="">
+            <img src="Images/Categories/Puzzle.png" height="100">
+            <p>@Model.Single(x=>x.Id==4).Name</p>
+        </a>
+    </div>
+
+</div>
