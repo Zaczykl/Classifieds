@@ -1,11 +1,28 @@
 ﻿@{
+    @model Classifieds.Core.ViewModels.HomePageViewModel
     ViewData["Title"] = "Ogłoszenia";
+    
+    if (ViewBag.Message != null) {
+        <p id="homePageMessage" class="alert alert-info mt-4 mb-4">@ViewBag.Message</p>
+    }
 }
 
 <div class="categories">
-    @await Html.PartialAsync("_Categories")
+    @await Html.PartialAsync("_Categories", Model.Categories)
 </div>
 
 <div class="classifieds">
-    @await Html.PartialAsync("_Classifieds")
+    @await Html.PartialAsync("_Classifieds",Model.Classifieds)
 </div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        setTimeout(function () {
+            var homePageMessage = document.getElementById("homePageMessage");
+            homePageMessage.classList.add("fadeOut");            
+        }, 5000);
+
+    </script>
+}

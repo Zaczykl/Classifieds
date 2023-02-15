@@ -18,17 +18,26 @@ namespace Classifieds.Controllers
     public class HomeController : Controller
     {
         private readonly ICategoryService _categoryService;
+        private readonly IClassifiedService _classifiedService;
 
-        public HomeController(ICategoryService categoryService)
+        public HomeController(ICategoryService categoryService, IClassifiedService classifiedService)
         {
             _categoryService = categoryService;
+            _classifiedService = classifiedService;
         }
 
         public IActionResult Index()
         {
-            var vm = _categoryService.GetCategories();
+            if (TempData["Message"] != null)
+            {
+                ViewBag.Message = TempData["Message"].ToString();
+            }            
+            var categories= _categoryService.GetCategories();
+            var classifieds = _classifiedService.GetClassifieds();
+            var vm = new HomePageViewModel { Categories = categories, Classifieds = classifieds };
             return View(vm);
         }
+
         [Authorize]
         public IActionResult Privacy()
         {

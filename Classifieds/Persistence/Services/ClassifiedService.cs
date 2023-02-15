@@ -22,6 +22,11 @@ namespace Classifieds.Persistence.Services
             _unitOfWork = unitOfWork;
         }
 
+        public IEnumerable<Classified> GetClassifieds()
+        {
+            return _unitOfWork.ClassifiedRepository.GetClassifieds();
+        }
+
         public void Add(Classified classified)
         {
             _unitOfWork.ClassifiedRepository.Add(classified);

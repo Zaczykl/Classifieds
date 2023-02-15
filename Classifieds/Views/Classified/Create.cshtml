@@ -9,7 +9,6 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
-
     <div class="container bg-light mb-3">
         <div class="form-group p-3 col-lg-9">
             @Html.LabelFor(x => x.Classified.Title)
@@ -91,30 +90,29 @@
 {
     <script type="text/javascript">        
 
-        const maxFileSize=200*1024;
-        const maxNumberOfProductImages=5;
-        const allowedExtensions = ['jpeg', 'jpg', 'png'];
-        const thumbnailInput = document.getElementById('thumbnailInput');
-        const otherImagesInput = document.getElementById("otherProductImagesInput");
-        const previewImage = document.getElementById('previewImage');
-        const priceInput = document.getElementById("priceTextbox");
-        const ProductImageNames = document.getElementById('ProductImageNames');  
+        var maxFileSize=200*1024;
+        var maxNumberOfProductImages=5;
+        var allowedExtensions = ['jpeg', 'jpg', 'png'];
+        var thumbnailInput = document.getElementById('thumbnailInput');
+        var otherImagesInput = document.getElementById("otherProductImagesInput");
+        var previewImage = document.getElementById('previewImage');
+        var priceInput = document.getElementById("priceTextbox");
+        var ProductImageNames = document.getElementById('ProductImageNames');
+        
         
 
         function previewThumbnail() 
         {            
             var file = thumbnailInput.files[0];
             var reader = new FileReader();
-            var fileExtension = file.name.split('.').pop().toLowerCase();
-            
-            checkIfUserClickedCancel();
+            var fileExtension = file.name.split('.').pop().toLowerCase();            
 
             if (!validateExtension(fileExtension, thumbnailInput)) {
                 previewImage.src = "";
                 return;
             }
 
-            if(!validateMaxFileSize(file, thumbnailInput)) {
+            if (!validateMaxFileSize(file, thumbnailInput)) {
                 previewImage.src = "";
                 return;
             }  
@@ -172,18 +170,7 @@
             $('#alertEmptyThumbnail').attr("class", "d-block p-2");
             $('#labelUploadInput').removeClass("fa-bounce");
             $('#labelForThumbnail').addClass("fa-bounce");
-        }        
-
-        function checkIfUserClickedCancel() {
-            thumbnailInput.addEventListener("change", function (event) {
-                if (!event.target.files.length) {
-                    thumbnailInput.value = "";
-                    preview.src = "";
-                    showEmptyThumbnailAlert();
-                    return;
-                }
-            });
-        }
+        }  
 
         function validateExtension(fileExtension, input) {
             if (!allowedExtensions.includes(fileExtension)) {
@@ -233,6 +220,15 @@
                 if (parts[1].length > 2) {
                     this.value = parts[0] + "." + parts[1].substr(0, 2);
                 }
+            }
+        });
+
+        thumbnailInput.addEventListener("change", function (event) {
+            if (!event.target.files.length) {
+                thumbnailInput.value = "";
+                previewImage.src = "";
+                showEmptyThumbnailAlert();
+                return;
             }
         });
 

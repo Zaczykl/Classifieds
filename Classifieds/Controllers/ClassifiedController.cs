@@ -1,22 +1,12 @@
 ﻿using Classifieds.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Classifieds.Persistence.Extensions;
-using Classifieds.Persistence.Repositories;
 using Classifieds.Core.Models.Domains;
-using Classifieds.Persistence;
-using System.Globalization;
 using Microsoft.AspNetCore.Http;
-using System.IO;
 using System.Threading.Tasks;
-using Classifieds.Core;
-using Classifieds.Persistence.Services;
 using Classifieds.Core.Services;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Classifieds.Controllers
 {
@@ -62,7 +52,7 @@ namespace Classifieds.Controllers
             _classifiedService.convertPrice(vm.Classified, vm.FormattedPrice);
             _classifiedService.Add(vm.Classified);
             _userService.UpdateContactNumber(userId, vm.ContactNumber);
-
+            TempData["Message"] = "Ogłoszenie zostało dodane.";
             return RedirectToAction("Index", "Home");
         }
 

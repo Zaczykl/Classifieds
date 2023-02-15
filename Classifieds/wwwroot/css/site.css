@@ -11,6 +11,11 @@ input[type="file"] {
     cursor: pointer;
 }
 
+.fadeOut {
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
 
 a.navbar-brand {
   white-space: normal;
