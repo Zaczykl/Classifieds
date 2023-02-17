@@ -1,29 +1,29 @@
 ﻿@model IEnumerable<Classifieds.Core.Models.Domains.Classified>
+<div id="classifiedsPartial">
+    <div class="text-center mt-5 mb-3">
+        <h1>Ogłoszenia</h1>
+    </div>
 
-<div class="text-center mt-5 mb-3">
-    <h1>Ogłoszenia</h1>
-</div>
-
-
-<div class="container mt-5">
-    <div class="row">
-        @if (Model!=null && Model.Any()) {
-           @foreach (var classified in Model)
-            {
-                var imageBase64 = Convert.ToBase64String(classified.ProductImages.Single(x=>x.Thumbnail==true).Image);
-                var imageUrl = $"data:image/jpeg;base64,{imageBase64}";
-                <div class="col-lg-3 mb-3">
-                    <div class="bg-light border text-center">
-                        <p class="mt-2 text-truncate">@classified.Title</p>
-                        <img height="200" style="max-width: 90%;" src="@imageUrl" />
-                        <p class="mt-2">@classified.Price zł</p>
+    <div class="container mt-5">
+        <div class="row">
+            @if (Model!=null && Model.Any()) {
+               @foreach (var classified in Model)
+                {
+                    var imageBase64 = Convert.ToBase64String(classified.ProductImages.Single(x=>x.Thumbnail==true).Image);
+                    var imageUrl = $"data:image/jpeg;base64,{imageBase64}";
+                    <div class="col-lg-3 mb-3">
+                        <div class="bg-light border text-center">
+                            <p class="mt-2 text-truncate">@classified.Title</p>
+                            <img height="200" style="max-width: 90%;" src="@imageUrl" />
+                            <p class="mt-2">@classified.Price zł</p>
+                        </div>
                     </div>
-                </div>
+                }
             }
-        }
-        else {
-            <p>Brak ogłoszeń w serwisie.</p>
-        }
+            else {
+                    <h2>Brak ogłoszeń w serwisie.</h2>
+            }
+        </div>
     </div>
 </div>
 

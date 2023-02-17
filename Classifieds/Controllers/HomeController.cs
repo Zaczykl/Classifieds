@@ -2,10 +2,12 @@
 using Classifieds.Core.Services;
 using Classifieds.Core.ViewModels;
 using Classifieds.Persistence;
+using Classifieds.Persistence.Extensions;
 using Classifieds.Persistence.Repositories;
 using Classifieds.Persistence.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Classification;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -27,15 +29,21 @@ namespace Classifieds.Controllers
         }
 
         public IActionResult Index()
-        {
-            if (TempData["Message"] != null)
-            {
-                ViewBag.Message = TempData["Message"].ToString();
-            }            
+        { 
             var categories= _categoryService.GetCategories();
             var classifieds = _classifiedService.GetClassifieds();
             var vm = new HomePageViewModel { Categories = categories, Classifieds = classifieds };
+
+            if (TempData["Message"] != null)
+                ViewBag.Message = TempData["Message"].ToString();
+
             return View(vm);
+        }
+
+        public IActionResult FilterCategory(int id)
+        {
+            IEnumerable<Classified> classifieds = _classifiedService.GetFilteredClassifieds(id);
+            return PartialView("_Classifieds", classifieds);
         }
 
         [Authorize]

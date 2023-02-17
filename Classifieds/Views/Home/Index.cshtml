@@ -18,11 +18,27 @@
 @section scripts
 {
     <script type="text/javascript">
-
+       
         setTimeout(function () {
             var homePageMessage = document.getElementById("homePageMessage");
             homePageMessage.classList.add("fadeOut");            
         }, 5000);
 
+        function filterCategory(id) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("FilterCategory","Home")",
+                data: { id: id },
+                success: function (data) {
+                    $('#classifiedsPartial').html(data);
+                },
+                error: function (data) {
+                    alert(data.message)
+                },
+                dataType: "html"
+            });
+        }
+                   
+    
     </script>
 }

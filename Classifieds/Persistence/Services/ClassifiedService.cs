@@ -27,6 +27,11 @@ namespace Classifieds.Persistence.Services
             return _unitOfWork.ClassifiedRepository.GetClassifieds();
         }
 
+        public IEnumerable<Classified> GetFilteredClassifieds(int categoryId)
+        {
+            return _unitOfWork.ClassifiedRepository.GetFilteredClassifieds(categoryId);
+        }
+
         public void Add(Classified classified)
         {
             _unitOfWork.ClassifiedRepository.Add(classified);

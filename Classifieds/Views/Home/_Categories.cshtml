@@ -3,38 +3,40 @@
 <div class="text-center mt-5">
     <h1>Kategorie</h1>
 </div>
+
 <div class="container d-flex justify-content-around mt-3">
 
-    <div class="rounded-circle text-center">
-        <a href="">
+    <div id="clickable" class="text-center clickable">
+        <a onclick="filterCategory(1)">
             <img src="Images/Categories/Board.png" height="100">
             <p>@Model.Single(x=>x.Id==1).Name</p>
         </a>
     </div>
+    
 
-    <div class="rounded-circle text-center">
-        <a href="">
+    <div class="text-center clickable">
+        <a onclick="filterCategory(2)">
             <img src="Images/Categories/RPG.png" height="100">
             <p>@Model.Single(x=>x.Id==2).Name</p>
         </a>
     </div>
 
-    <div class="rounded-circle text-center">
-        <a href="">
+    <div class="text-center clickable">
+        <a onclick="filterCategory(3)">
             <img src="Images/Categories/Card.png" height="100">
             <p>@Model.Single(x=>x.Id==3).Name</p>
         </a>
     </div>
 
-    <div class="rounded-circle text-center">
-        <a href="">
+    <div class="text-center clickable">
+        <a onclick="filterCategory(5)">
             <img src="Images/Categories/Kids.png" height="100">
             <p>@Model.Single(x=>x.Id==5).Name</p>
         </a>
     </div>
 
-    <div class="rounded-circle text-center">
-        <a href="">
+    <div class="text-center clickable">
+        <a onclick="filterCategory(4)">
             <img src="Images/Categories/Puzzle.png" height="100">
             <p>@Model.Single(x=>x.Id==4).Name</p>
         </a>
