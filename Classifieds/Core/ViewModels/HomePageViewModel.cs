@@ -8,6 +8,5 @@ namespace Classifieds.Core.ViewModels
     {
         public IEnumerable<Category> Categories { get; set; }
         public IEnumerable<Classified> Classifieds { get; set; }
-        public FilterClassifieds FilterClassifieds { get; set; }
     }
 }

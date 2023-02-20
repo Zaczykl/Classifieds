@@ -29,8 +29,8 @@ namespace Classifieds.Controllers
         }
 
         public IActionResult Index()
-        { 
-            var categories= _categoryService.GetCategories();
+        {
+            var categories = _categoryService.GetCategories();
             var classifieds = _classifiedService.GetClassifieds();
             var vm = new HomePageViewModel { Categories = categories, Classifieds = classifieds };
 
@@ -40,9 +40,9 @@ namespace Classifieds.Controllers
             return View(vm);
         }
 
-        public IActionResult FilterCategory(int id)
+        public IActionResult FilterClassifieds(string title,int categoryId)
         {
-            IEnumerable<Classified> classifieds = _classifiedService.GetFilteredClassifieds(id);
+            IEnumerable<Classified> classifieds = _classifiedService.GetClassifieds(title, categoryId);
             return PartialView("_Classifieds", classifieds);
         }
 

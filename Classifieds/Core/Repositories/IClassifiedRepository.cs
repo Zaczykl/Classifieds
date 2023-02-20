@@ -5,8 +5,7 @@ namespace Classifieds.Core.Repositories
 {
     public interface IClassifiedRepository
     {
-        IEnumerable<Classified> GetClassifieds();
-        IEnumerable<Classified> GetFilteredClassifieds(int categoryId);
+        IEnumerable<Classified> GetClassifieds(string title, int categoryId);
         void Add(Classified classified);
     }
 }

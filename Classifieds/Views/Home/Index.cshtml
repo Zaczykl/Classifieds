@@ -7,6 +7,15 @@
     }
 }
 
+<form id="filterForm" class="row align-items-center">
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Szukaj</button>
+    </div>
+    <div class="col"> 
+        <input type="text" class="form-control" id="titleTextbox" placeholder="Szukaj ogłoszeń po tytule">
+    </div>
+</form>
+
 <div class="categories">
     @await Html.PartialAsync("_Categories", Model.Categories)
 </div>
@@ -18,17 +27,15 @@
 @section scripts
 {
     <script type="text/javascript">
-       
-        setTimeout(function () {
-            var homePageMessage = document.getElementById("homePageMessage");
-            homePageMessage.classList.add("fadeOut");            
-        }, 5000);
 
-        function filterCategory(id) {
+        var categoryId=0;
+        var title = String();
+
+        function filter(title,id) {
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("FilterCategory","Home")",
-                data: { id: id },
+                url: "@Url.Action("FilterClassifieds","Home")",
+                data: { categoryId: id, title: title },
                 success: function (data) {
                     $('#classifiedsPartial').html(data);
                 },
@@ -37,7 +44,23 @@
                 },
                 dataType: "html"
             });
-        }
+        };
+
+        function filterCategory(id) {
+            categoryId=id;
+            filter(title,categoryId);
+        };
+
+        $('#filterForm').submit(function () {
+            title = $('#titleTextbox').val();
+            filter(title, categoryId);
+            return false;
+        });
+
+        setTimeout(function () {
+            var homePageMessage = document.getElementById("homePageMessage");
+            homePageMessage.classList.add("fadeOut");
+        }, 5000);
                    
     
     </script>

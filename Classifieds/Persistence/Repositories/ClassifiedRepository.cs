@@ -16,21 +16,20 @@ namespace Classifieds.Persistence.Repositories
             _context = context;
         }
 
-        public IEnumerable<Classified> GetClassifieds()
+        public IEnumerable<Classified> GetClassifieds(string title, int categoryId)
         {
-            return _context.Classifieds
-                .OrderByDescending(x=>x.Id)
-                .Include(x => x.ProductImages);
-                
-        }
+            var classifieds = _context.Classifieds
+                .Include(x => x.ProductImages)
+                .AsQueryable();
 
-        public IEnumerable<Classified> GetFilteredClassifieds(int categoryId)
-        {
-            return _context.Classifieds
-                .Where(x=>x.CategoryId==categoryId)
-                .OrderByDescending(x => x.Id)
-                .Include(x => x.ProductImages);
+            if (categoryId != 0)
+                classifieds = classifieds.Where(x => x.CategoryId == categoryId);
+            if (title != null)
+                classifieds = classifieds.Where(x => x.Title.Contains(title));
+
+            return classifieds.OrderByDescending(x => x.Id);
         }
+        
         public void Add(Classified classified)
         {
             _context.Classifieds.Add(classified);
