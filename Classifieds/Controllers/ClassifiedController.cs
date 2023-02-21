@@ -22,6 +22,12 @@ namespace Classifieds.Controllers
             _userService = userService;
         }
 
+        public IActionResult Display(int classifiedId)
+        {
+            var classified = _classifiedService.GetClassified(classifiedId);
+            return View(classified);
+        }
+
         [Authorize]
         public IActionResult Create()
         {
@@ -29,8 +35,7 @@ namespace Classifieds.Controllers
             var vm = new CreateClassifiedViewModel
             {
                 Categories = _categoryService.GetCategories(),
-                Classified = new Classified { UserId = userId },
-                ContactNumber = _userService.Get(userId).PhoneNumber
+                Classified = new Classified { UserId = userId, ContactNumber=_userService.Get(userId).PhoneNumber }
             };
             return View(vm);
         }
@@ -51,7 +56,7 @@ namespace Classifieds.Controllers
             await _classifiedService.AttachPhotosAsync(vm);
             _classifiedService.convertPrice(vm.Classified, vm.FormattedPrice);
             _classifiedService.Add(vm.Classified);
-            _userService.UpdateContactNumber(userId, vm.ContactNumber);
+            _userService.UpdateContactNumber(userId, vm.Classified.ContactNumber);
             TempData["Message"] = "Ogłoszenie zostało dodane.";
             return RedirectToAction("Index", "Home");
         }

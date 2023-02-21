@@ -22,6 +22,10 @@ namespace Classifieds.Persistence.Services
             _unitOfWork = unitOfWork;
         }
 
+        public Classified GetClassified(int id)
+        {
+            return _unitOfWork.ClassifiedRepository.GetClassified(id);
+        }
         public IEnumerable<Classified> GetClassifieds(string title = null, int categoryId = 0)
         {
             return _unitOfWork.ClassifiedRepository.GetClassifieds(title, categoryId);

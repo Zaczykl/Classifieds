@@ -16,6 +16,13 @@ namespace Classifieds.Persistence.Repositories
             _context = context;
         }
 
+        public Classified GetClassified(int id)
+        {
+            var classified = _context.Classifieds.Single(x => x.Id == id);
+            classified.ProductImages = _context.ProductImages.Where(x => x.ClassifiedId == id).ToList();
+            classified.User = _context.Users.Single(x => x.Id == classified.UserId);
+            return classified;
+        }
         public IEnumerable<Classified> GetClassifieds(string title, int categoryId)
         {
             var classifieds = _context.Classifieds

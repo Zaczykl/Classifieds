@@ -1,6 +1,7 @@
 ﻿using Classifieds.Core;
 using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 

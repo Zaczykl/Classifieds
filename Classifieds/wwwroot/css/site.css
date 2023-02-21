@@ -16,6 +16,10 @@ input[type="file"] {
     transition: opacity 2s ease-in-out;
 }
 
+.carousel-item img {
+    max-height: 500px;
+    object-fit: contain;
+}
 
 a.navbar-brand {
   white-space: normal;

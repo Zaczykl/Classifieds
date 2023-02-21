@@ -137,6 +137,9 @@ namespace Classifieds.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
+                    b.Property<string>("ContactNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(2000)")

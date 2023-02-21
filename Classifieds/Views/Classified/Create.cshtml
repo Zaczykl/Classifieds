@@ -74,8 +74,8 @@
                 @Html.TextBoxFor(x => x.FormattedPrice, new { @class="form-control",type="number",step="0.5",id="priceTextbox",placeholder="Cena w zł",min="1", max="10000",required="required"})
             </div>
             <div class="form-group p-3 col-sm-3">
-                @Html.LabelFor(x=>x.ContactNumber)
-                @Html.TextBoxFor(x => x.ContactNumber, new { @class="form-control",type="text",minlength="9",maxlength="9",pattern="[0-9]{9}", id="contactNumberTextbox" ,placeholder="dokładnie 9 cyfr",required="required"})
+                @Html.LabelFor(x=>x.Classified.ContactNumber)
+                @Html.TextBoxFor(x => x.Classified.ContactNumber, new { @class="form-control",type="text",minlength="9",maxlength="9",pattern="[0-9]{9}", id="contactNumberTextbox" ,placeholder="dokładnie 9 cyfr",required="required"})
             </div>
         </div>
     </div>
