@@ -1,0 +1,96 @@
+﻿@page
+@model Classifieds.Areas.Identity.Pages.Account.Manage.ManageClassifiedsModel
+@{
+    ViewData["Title"] = "Zarządzaj ogłoszeniami";
+    ViewData["ActivePage"] = ManageNavPages.ManageClassified;
+}
+
+
+<h4>@ViewData["Title"]</h4>
+
+@if (Model.Classifieds != null && Model.Classifieds.Any())
+{
+    @foreach (var classified in Model.Classifieds)
+    {
+        <div class="row">
+            <div class="col-9 mb-2">
+                <a href="@Url.Action("Display", "Classified",new { classifiedId = classified.Id })">
+                <div class="bg-light border text-center">
+                    
+                        <p class="mt-2 text-truncate">@classified.Title</p>
+                        <img height="200" style="max-width: 90%;" src="@classified.ProductImages.Single(x=>x.Thumbnail).ImageUrl" />
+                    
+                </div>
+                </a>
+            </div>
+            <div class="col-3">
+                <div class="row mb-2">
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Display", "Classified", new { classifiedId = classified.Id })'">Wyświetl</button>
+                </div>
+                <div class="row mb-2">
+                    <button class="btn btn-primary"  onclick="location.href='@Url.Action("Create", "Classified", new { classifiedId = classified.Id })'">Edytuj</button>
+                </div>
+                <div class="row mb-2">
+                    <button class="btn btn-primary" onclick="deactivate(@classified.Id,this)">Dezaktywuj</button>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary" onclick="deleteClassified(@classified.Id,this)">Usuń na zawsze</button>
+                </div>
+
+            </div>
+        </div>
+
+    }
+}
+else
+{
+    <h2>Brak ogłoszeń.</h2>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        function deactivate(id, btn) {
+            if (!confirm("Czy na pewno chcesz dezaktywować to ogłoszenie?"))
+                return;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Deactivate","Classified")",
+                data: { id: id },
+                success: function (data) {
+                    var row = btn.parentNode.parentNode.parentNode;
+                    row.parentNode.removeChild(row);
+                },
+                error: function (data) {
+                    alert(data.message)
+                },
+                dataType: "json"
+            });
+        }
+
+        function deleteClassified (id, btn) {
+            if (!confirm("Czy na pewno chcesz usunąć na zawsze to ogłoszenie? Nie będzie możliwości przywrócenia."))
+                return;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Delete","Classified")",
+                data: { id: id },
+                success: function (data) {
+                    var row = btn.parentNode.parentNode.parentNode;
+                    row.parentNode.removeChild(row);
+                },
+                error: function (data) {
+                    alert(data.message)
+                },
+                dataType: "json"
+            });
+        }
+      
+
+
+
+    </script>
+}

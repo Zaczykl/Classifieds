@@ -4,14 +4,16 @@ using Classifieds.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Classifieds.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230222120418_addImageUrlToProductImage")]
+    partial class addImageUrlToProductImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,9 +135,6 @@ namespace Classifieds.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("CategoryId")
                         .IsRequired()
                         .HasColumnType("int");
@@ -181,13 +180,13 @@ namespace Classifieds.Migrations
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Thumbnail")
                         .HasColumnType("bit");
 
                     b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("imageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

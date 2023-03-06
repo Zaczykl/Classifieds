@@ -12,5 +12,8 @@ namespace Classifieds.Core.ViewModels
         public IFormFile File { get; set; }
         public IEnumerable<IFormFile> Files { get; set; }
         public IEnumerable<Category> Categories { get; set; }
+        public bool ThumbnailChanged { get; set; }
+        public bool ImagesChanged { get; set; }
+        public string thumbnailUrl { get; set; }
     }
 }

@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public byte[] Image { get; set; }
+        public string ImageUrl { get; set; }
         public int ClassifiedId { get; set; }
         public string UserId { get; set; }
         public bool Thumbnail { get; set; }

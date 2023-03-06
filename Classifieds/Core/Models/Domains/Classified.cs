@@ -44,6 +44,8 @@ namespace Classifieds.Core.Models.Domains
 
         public string UserId { get; set; }
 
+        public bool Active { get; set; }
+
 
         [Display(Name = "Numer kontaktowy")]
         public string ContactNumber { get; set; }
