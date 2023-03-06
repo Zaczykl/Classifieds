@@ -8,13 +8,17 @@
 }
 
 <form id="filterForm" class="row align-items-center">
-
+    <div class="row col-9">
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">Szukaj</button>
         </div>
-        <div class="col"> 
+        <div class="col">
             <input type="text" class="form-control" id="titleTextbox" placeholder="Szukaj ogłoszeń po tytule">
         </div>
+    </div>
+    <div class="col-3">
+        @Html.DropDownListFor(x=>x.SortClassifieds.SortBy,Model.SortClassifieds.SortOptions,"Sortowanie",new { @class = "form-control", @id="sortDropdown" })
+    </div>
 </form>
 
 <div class="categories">
@@ -29,15 +33,15 @@
 {
     <script type="text/javascript">
 
-        var categoryId=0;
+        var categoryId = 0;
         var title = String();
 
-        
-        function filter(title,id) {
+        function filter(title, id) {
+            var sortBySelectedVal = $('#sortDropdown').val();
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("FilterClassifieds","Home")",
-                data: { categoryId: id, title: title },
+                url: "@Url.Action("FilterClassifieds", "Home")",
+                data: { categoryId: id, title: title, sortBy: sortBySelectedVal },
                 success: function (data) {
                     $('#classifiedsPartial').html(data);
                 },

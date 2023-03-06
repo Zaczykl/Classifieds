@@ -37,6 +37,24 @@ namespace Classifieds.Persistence.Services
             GetThumbnailsUrls(classifieds);
             return classifieds;
         }
+        
+        public IEnumerable<Classified> SortClassifieds(string sortByRule, IEnumerable<Classified> classifiedsToSort)
+        {
+            switch (sortByRule)
+            {
+                case "NameAsc":
+                    return classifiedsToSort.OrderBy(x => x.Title);
+                case "NameDesc":
+                    return classifiedsToSort.OrderByDescending(x => x.Title);
+                case "PriceAsc":
+                    return classifiedsToSort.OrderBy(x => x.Price);
+                case "PriceDesc":
+                    return classifiedsToSort.OrderByDescending(x => x.Price);
+                default: 
+                    return classifiedsToSort;
+            }
+        }
+        
 
         public void Add(Classified classified)
         {

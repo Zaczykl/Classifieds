@@ -10,6 +10,7 @@ namespace Classifieds.Core.Services
     {
         Classified GetClassified(int id);
         IEnumerable<Classified> GetClassifieds(FilterClassifieds classifiedParams);
+        IEnumerable<Classified> SortClassifieds(string sortByRule, IEnumerable<Classified> classifiedsToSort);
         void Add(Classified classified);
         void Update(CreateClassifiedViewModel viewModel);
         void Activate(int id, string userId);

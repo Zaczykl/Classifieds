@@ -2,6 +2,7 @@
 using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Repositories;
 using Classifieds.Core.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,6 @@ namespace Classifieds.Persistence.Repositories
                 .Include(x => x.ProductImages)
                 .OrderByDescending(x => x.Id);
         }
-
 
         public void Add(Classified classified)
         {            
