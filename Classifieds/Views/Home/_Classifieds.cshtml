@@ -8,20 +8,16 @@
         <div class="row">
             @if (Model!=null && Model.Any()) {
                @foreach (var classified in Model)
-                {                    
-                    var imageBase64 = Convert.ToBase64String(classified.ProductImages.Single(x=>x.Thumbnail==true).Image);
-                    var imageUrl = $"data:image/jpeg;base64,{imageBase64}";
-                    
+                {
                         <div class="col-lg-3 mb-3">
                             <div class="bg-light border text-center">
                             <a href="@Url.Action("Display", "Classified",new { classifiedId = classified.Id })">
                                 <p class="mt-2 text-truncate">@classified.Title</p>
-                                <img height="200" style="max-width: 90%;" src="@imageUrl" />
+                                <img height="200" style="max-width: 90%;" src="@classified.ProductImages.Single(x=>x.Thumbnail).ImageUrl" />
                                 <p class="mt-2">@classified.Price zł</p>
                             </a>
                             </div>
-                        </div>
-                    
+                        </div>                    
                 }
             }
             else {

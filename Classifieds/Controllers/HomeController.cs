@@ -1,4 +1,5 @@
-﻿using Classifieds.Core.Models.Domains;
+﻿using Classifieds.Core;
+using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Services;
 using Classifieds.Core.ViewModels;
 using Classifieds.Persistence;
@@ -31,7 +32,7 @@ namespace Classifieds.Controllers
         public IActionResult Index()
         {
             var categories = _categoryService.GetCategories();
-            var classifieds = _classifiedService.GetClassifieds();
+            var classifieds = _classifiedService.GetClassifieds(new FilterClassifieds { Active = true });
             var vm = new HomePageViewModel { Categories = categories, Classifieds = classifieds };
 
             if (TempData["Message"] != null)
@@ -42,7 +43,7 @@ namespace Classifieds.Controllers
 
         public IActionResult FilterClassifieds(string title,int categoryId)
         {
-            IEnumerable<Classified> classifieds = _classifiedService.GetClassifieds(title, categoryId);
+            IEnumerable<Classified> classifieds = _classifiedService.GetClassifieds(new FilterClassifieds { Title = title, categoryId = categoryId, Active = true });
             return PartialView("_Classifieds", classifieds);
         }
 

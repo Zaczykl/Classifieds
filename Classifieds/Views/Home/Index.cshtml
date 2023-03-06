@@ -8,11 +8,26 @@
 }
 
 <form id="filterForm" class="row align-items-center">
-    <div class="col-auto">
-        <button type="submit" class="btn btn-primary">Szukaj</button>
+    <div class="col-lg-9">
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Szukaj</button>
+        </div>
+        <div class="col"> 
+            <input type="text" class="form-control" id="titleTextbox" placeholder="Szukaj ogłoszeń po tytule">
+        </div>
     </div>
-    <div class="col"> 
-        <input type="text" class="form-control" id="titleTextbox" placeholder="Szukaj ogłoszeń po tytule">
+    <div class="col-lg-3">
+        <div>
+            <button type="submit" class="btn btn-primary">Sortuj</button>
+        </div>
+        <div>
+            <label asp-for="SortBy" class="col-form-label">Sortuj wg:</label>
+            <select asp-for="SortBy" class="form-select">
+                <option value="cheapest">Od najtańszych</option>
+                <option value="most_expensive">Od najdroższych</option>
+                <option value="most_relevant">Najbardziej istotne</option>
+            </select>
+        </div>
     </div>
 </form>
 

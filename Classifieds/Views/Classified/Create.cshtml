@@ -1,4 +1,5 @@
 ﻿@model Classifieds.Core.ViewModels.CreateClassifiedViewModel
+
 @{
     ViewData["Title"] = "Dodaj ogłoszenie";
 }
@@ -8,9 +9,12 @@
 @using (Html.BeginForm("Create", "Classified", FormMethod.Post, new { @enctype = "multipart/form-data"}))
 {
     @Html.AntiForgeryToken()
-    @Html.ValidationSummary()
+    @Html.HiddenFor(x=>x.Classified.Id);
+    @Html.HiddenFor(x=>x.ThumbnailChanged);
+    @Html.HiddenFor(x=>x.ImagesChanged);
+
     <div class="container bg-light mb-3">
-        <div class="form-group p-3 col-lg-9">
+        <div class="form-group p-3 col-lg-6">
             @Html.LabelFor(x => x.Classified.Title)
             @Html.TextBoxFor(x=>x.Classified.Title,new {@class="form-control",autofocus="autofocus",placeholder="Należy podać tytuł ogłoszenia",required="required",minLength=Model.Classified.TitleMinLength,maxlength=Model.Classified.TitleMaxLength})
         </div>        
@@ -38,18 +42,32 @@
         </div>
         <div class="row">
             <div class="col-6">
-                <div class="form-group p-3 col">
-                    <label for="thumbnailInput" class="custom-file-upload">
-                        <i class="fa fa-cloud-upload fa-bounce" id="labelForThumbnail" aria-hidden="true"></i> Dodaj miniaturkę
-                    </label>
-                    @Html.TextBoxFor(x => x.File, new { @class = "form-control", type = "file", id="thumbnailInput", accept="image/*", required="required", onchange="previewThumbnail();"})                    
+                <div class="form-group p-3 col">                    
+
+                    @if (Model.Classified.Id == 0)
+                    {
+                        <label for="thumbnailInput" class="custom-file-upload">
+                            <i class="fa fa-cloud-upload fa-bounce" id="labelForThumbnail" aria-hidden="true"></i>  Dodaj miniaturkę 
+                        </label>
+                        @Html.TextBoxFor(x => x.File, new { @class = "form-control", type = "file", id="thumbnailInput", accept="image/*", required="required", onchange="previewThumbnail();"})
+                    }
+                    else
+                    {
+                        <label for="thumbnailInput" class="custom-file-upload">
+                            <i class="fa fa-cloud-upload" id="labelForThumbnail" aria-hidden="true"></i>  Edytuj miniaturkę 
+                        </label>
+                        @Html.TextBoxFor(x => x.File, new { @class = "form-control", type = "file", id="thumbnailInput", accept="image/*", onchange="previewThumbnail();"})
+                    }
                 </div>
                 <div class="form-group p-3 col">
                     <label for="otherProductImagesInput" class="custom-file-upload">
-                        <i class="fa fa-cloud-upload" id="labelUploadInput" aria-hidden="true"></i> Dodaj do 5 zdjęć przedmiotu
+                        <i class="fa fa-cloud-upload" id="labelUploadInput" aria-hidden="true"></i> Zdjęcia dodatkowe
                     </label>
+                    <div>
                     @Html.TextBoxFor(x => x.Files, new { @class = "form-control", type = "file",multiple="multiple", id="otherProductImagesInput", accept="image/*", onchange="addOtherImages();"})
-                    <ul id="ProductImageNames"></ul>
+                    <span id="additionalImagesInfo"></span>
+                    </div>
+                    <ul id="productImageNames"></ul>
                 </div>            
                 <div class="form-group p-3 col">
                     @Html.LabelFor(x => x.Classified.CategoryId)
@@ -58,7 +76,7 @@
             </div>
             <div class="col-6">
                 <div class="d-flex justify-content-center align-items-center p-3">
-                    <img id="previewImage" height="300" style="display: none;max-width: 90%;">
+                    <img id="previewImage" height="250" style="display: none; max-width: 90%;">
                 </div>
             </div>
         </div>
@@ -66,12 +84,12 @@
     <div class="container bg-light mb-3">
         <div class="form-group p-3">
             @Html.LabelFor(x => x.Classified.Description)
-            @Html.TextAreaFor(x=>x.Classified.Description,10,10, new { @class = "form-control", required="required", minlength=Model.Classified.DescriptionMinLength,maxLength=Model.Classified.DescriptionMaxLength})
+            @Html.TextAreaFor(x=>x.Classified.Description, new { @class = "form-control", required="required", minlength=Model.Classified.DescriptionMinLength,maxLength=Model.Classified.DescriptionMaxLength, wrap = "soft", rows = "10" })
         </div>
         <div class="row p-3">
             <div class="form-group p-3 col-sm-3">
                 @Html.LabelFor(x => x.Classified.Price)
-                @Html.TextBoxFor(x => x.FormattedPrice, new { @class="form-control",type="number",step="0.5",id="priceTextbox",placeholder="Cena w zł",min="1", max="10000",required="required"})
+                @Html.TextBoxFor(x => x.FormattedPrice, new { @class="form-control",type="number",step="0.1", id="priceTextbox",placeholder="Cena w zł",min="1", max="10000",required="required"})
             </div>
             <div class="form-group p-3 col-sm-3">
                 @Html.LabelFor(x=>x.Classified.ContactNumber)
@@ -90,23 +108,34 @@
 {
     <script type="text/javascript">        
 
-        var maxFileSize=200*1024;
-        var maxNumberOfProductImages=5;
+        var maxFileSize = 200 * 1024;
+        var maxNumberOfProductImages = 5;
         var allowedExtensions = ['jpeg', 'jpg', 'png'];
         var thumbnailInput = document.getElementById('thumbnailInput');
         var otherImagesInput = document.getElementById("otherProductImagesInput");
         var previewImage = document.getElementById('previewImage');
         var priceInput = document.getElementById("priceTextbox");
-        var ProductImageNames = document.getElementById('ProductImageNames');
-        
-        
+        var productImageNames = document.getElementById('productImageNames');
+        var additionalImagesInfo = document.getElementById("additionalImagesInfo");
+        var thumbnailUrl = "@Html.Raw(Model.thumbnailUrl)";
+        var classifiedId = @Model.Classified.Id;
+        var totalImagesCount = @Model.Classified.ProductImages.Count;
+
+
+        $(document).ready(function() {
+            if (classifiedId != 0)  {
+                previewImage.src = thumbnailUrl;
+                previewImage.style.display = 'block';
+                additionalImagesInfo.innerHTML = `Liczba zdjęć dodatkowych: ${totalImagesCount - 1}`;
+            }
+        });
 
         function previewThumbnail() 
         {            
             var file = thumbnailInput.files[0];
             var reader = new FileReader();
-            var fileExtension = file.name.split('.').pop().toLowerCase();            
-
+            var fileExtension = file.name.split('.').pop().toLowerCase();
+            
             if (!validateExtension(fileExtension, thumbnailInput)) {
                 previewImage.src = "";
                 return;
@@ -123,6 +152,7 @@
                 previewImage.src = "";
 
             reader.onloadend = function () {
+                document.getElementById('ThumbnailChanged').value = true;
                 previewImage.src = reader.result;
                 previewImage.style.display = 'block';
                 $('#alertEmptyThumbnail').attr("class", "d-none");                
@@ -148,21 +178,23 @@
                 if (!validateExtension(fileExtension, otherImagesInput))
                     return;
 
-                if (!validateMaxFileSize(file, thumbnailInput))
+                if (!validateMaxFileSize(file, otherImagesInput))
                     return;                                            
             });            
             displayProductImageNames(otherImagesInput);
+            document.getElementById('ImagesChanged').value = true;
             $("#labelUploadInput").removeClass("fa-bounce");
         }
 
         function displayProductImageNames(input) {            
-            ProductImageNames.innerHTML = '';
+            productImageNames.innerHTML = '';
+            additionalImagesInfo.innerHTML = '';
             var files = input.files
             for (let i = 0; i < files.length; i++) {
                 let file = files.item(i)
                 let el = document.createElement('li');
                 el.innerText = file.name;
-                ProductImageNames.appendChild(el);
+                productImageNames.appendChild(el);
             }
         }
 
@@ -197,7 +229,7 @@
         }
 
         function validateImage() {
-            if (!thumbnailInput.value) {
+            if (!ThumbnailInput.value && classifiedId == 0) {
                 $('#alertEmptyThumbnail').attr("class", "d-block p-2");
                 $('html, body').animate({
                     scrollTop: 0
