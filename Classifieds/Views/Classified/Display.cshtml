@@ -1,6 +1,11 @@
-﻿@model Classifieds.Core.Models.Domains.Classified
+﻿@using Microsoft.AspNetCore.Http;
+@model Classifieds.Core.Models.Domains.Classified
 @{
     ViewData["Title"] = Model.Title;
+    if (ViewBag.Message != null)
+    {
+        <p id="emailSendedMessage" class="alert alert-info mt-4 mb-4">@ViewBag.Message</p>
+    }
 }
 
 <div id="carousel" class="carousel carousel-dark slide" data-bs-ride="false">
@@ -54,8 +59,38 @@
         <h2>Opis:</h2>
         <pre>@Model.Description</pre>
         <br />
-        <h3>@Model.Price zł</h3>
-        <h3>Numer telefonu: @Model.ContactNumber</h3>
+        <span class="displayClassifiedInfo">@Model.Price zł</span>
+        <div class="d-flex align-items-center mt-2">
+            <span id="contactNumberSpan" class="d-none displayClassifiedInfo me-2">Numer telefonu: @Model.ContactNumber</span>
+            <button id="showContactBtn" class="btn btn-primary me-2" onclick="showContactNumber()">Pokaż numer telefonu</button>
+            <button class="btn btn-primary me-2" onclick="location.href='@Url.Action("Write", "Email", new { title = Model.Title, receiverEmail = Model.User.Email })'">Napisz e-mail sprzedającemu</button>
+
+        </div>
     </div>
 </div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        setTimeout(function () {
+            var homePageMessage = document.getElementById("emailSendedMessage");
+            homePageMessage.classList.add("fadeOut");
+        }, 5000);
+
+        function showContactNumber () {
+            $("#contactNumberSpan").removeClass("d-none").addClass("d-block");
+            $("#showContactBtn").addClass("d-none");
+        };
+
+    </script>
+}
+
+
+
+   
+
+
+
+
 

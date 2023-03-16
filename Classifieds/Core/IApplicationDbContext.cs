@@ -1,4 +1,5 @@
-﻿using Classifieds.Core.Models.Domains;
+﻿using Classifieds.Core.Cipher;
+using Classifieds.Core.Models.Domains;
 using Microsoft.EntityFrameworkCore;
 
 namespace Classifieds.Core
@@ -9,6 +10,8 @@ namespace Classifieds.Core
         DbSet<Classified> Classifieds { get; set; }
         DbSet<ProductImage> ProductImages { get; set; }
         DbSet<ApplicationUser> Users { get; set; }
+        DbSet<PasswordData> Passwords { get; set; }
+
 
         int SaveChanges();
     }

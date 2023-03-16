@@ -28,6 +28,10 @@ namespace Classifieds.Controllers
         { 
             var classified = _classifiedService.GetClassified(classifiedId);
             _classifiedService.GetImagesUrls(classified);
+
+            if (TempData["Message"] != null)
+                ViewBag.Message = TempData["Message"].ToString();
+
             return View(classified);
         }
 

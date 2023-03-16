@@ -1,10 +1,13 @@
 using Classifieds.Core;
+using Classifieds.Core.Email;
 using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Services;
 using Classifieds.Persistence;
+using Classifieds.Persistence.Extensions;
 using Classifieds.Persistence.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +30,8 @@ namespace Classifieds
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IClassifiedService, ClassifiedService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -44,6 +49,7 @@ namespace Classifieds
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.ConfigureWritable<EmailParams>(Configuration.GetSection("EmailSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

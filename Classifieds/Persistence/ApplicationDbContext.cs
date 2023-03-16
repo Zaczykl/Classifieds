@@ -1,12 +1,9 @@
 ﻿using Classifieds.Core;
+using Classifieds.Core.Cipher;
 using Classifieds.Core.Models.Domains;
 using Classifieds.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Text;
 
 namespace Classifieds.Persistence
 {
@@ -20,6 +17,7 @@ namespace Classifieds.Persistence
         public DbSet<Category> Categories { get; set; }
         public DbSet<Classified> Classifieds { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<PasswordData> Passwords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

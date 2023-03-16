@@ -2,14 +2,9 @@
 using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Repositories;
 using Classifieds.Core.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Classifieds.Persistence.Repositories
 {
