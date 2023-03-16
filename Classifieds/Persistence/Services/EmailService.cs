@@ -1,4 +1,5 @@
-﻿using Classifieds.Core.Email;
+﻿using Classifieds.Core;
+using Classifieds.Core.Email;
 using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Services;
 using Microsoft.Extensions.Configuration;
@@ -10,12 +11,18 @@ namespace Classifieds.Persistence.Services
     {
         private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
-        public EmailService(IPasswordService passwordService, IConfiguration configuration)
+        private readonly IUnitOfWork _unitOfWork;
+        public EmailService(IPasswordService passwordService, IConfiguration configuration, IUnitOfWork unitOfWork)
         {
             _passwordService = passwordService;
             _configuration = configuration;
+            _unitOfWork = unitOfWork;
         }
-        
+        public void SaveToDatabase(Email email)
+        {
+            _unitOfWork.EmailRepository.SaveToDatabase(email);
+            _unitOfWork.Complete();
+        }
         public async Task SendEmail(Email emailParams)
         {
             var body = GenerateHtml(emailParams);

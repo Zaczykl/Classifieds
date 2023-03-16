@@ -18,6 +18,7 @@ namespace Classifieds.Persistence
         public DbSet<Classified> Classifieds { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<PasswordData> Passwords { get; set; }
+        public DbSet<Email> Emails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

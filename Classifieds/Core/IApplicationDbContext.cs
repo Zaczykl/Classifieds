@@ -11,6 +11,7 @@ namespace Classifieds.Core
         DbSet<ProductImage> ProductImages { get; set; }
         DbSet<ApplicationUser> Users { get; set; }
         DbSet<PasswordData> Passwords { get; set; }
+        DbSet<Models.Domains.Email> Emails { get; set; }
 
 
         int SaveChanges();

@@ -14,12 +14,14 @@ namespace Classifieds.Persistence
             ClassifiedRepository = new ClassifiedRepository(context);
             UserRepository = new UserRepository(context);
             PasswordRepository = new PasswordRepository(context);
+            EmailRepository = new EmailRepository(context);
 
         }
         public ICategoryRepository CategoryRepository { get; set; }
         public IClassifiedRepository ClassifiedRepository { get; set; }
         public IUserRepository UserRepository { get; set; }
         public IPasswordRepository PasswordRepository { get; set; }
+        public IEmailRepository EmailRepository { get; set; }
 
         public void Complete()
         {

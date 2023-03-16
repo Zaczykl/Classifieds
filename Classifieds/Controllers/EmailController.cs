@@ -38,6 +38,7 @@ namespace Classifieds.Controllers
             try
             {
                 await _emailService.SendEmail(email);
+                _emailService.SaveToDatabase(email);
                 TempData["Message"] = "Wiadomość została wysłana.";
                 return Redirect(returnUrl);
             }

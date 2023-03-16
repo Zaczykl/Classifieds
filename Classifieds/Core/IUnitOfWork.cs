@@ -8,6 +8,7 @@ namespace Classifieds.Core
         IClassifiedRepository ClassifiedRepository { get; set; }
         IUserRepository UserRepository { get; set; }
         IPasswordRepository PasswordRepository { get; set; }
+        IEmailRepository EmailRepository { get; set; }
 
         void Complete();
     }
