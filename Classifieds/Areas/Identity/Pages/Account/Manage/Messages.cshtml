@@ -1,0 +1,68 @@
+﻿@page
+@model Classifieds.Areas.Identity.Pages.Account.Manage.MessagesModel
+@{
+    ViewData["Title"] = "Wiadomości";
+    ViewData["ActivePage"] = ManageNavPages.Messages;
+}
+
+@if (Model.Received != null && Model.Received.Any())
+{
+    <h4>Otrzymane wiadomości:</h4>
+
+    <div class="container">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Tytuł</th>
+                    <th scope="col">Treść</th>
+                    <th scope="col">Od kogo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var message in Model.Received)
+                {
+                    <tr>
+                        <td>@message.Title</td>
+                        <td>@message.Message</td>
+                        <td>@message.SenderEmail</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <h4>Brak otrzymanych wiadomości.</h4>
+}
+<br />
+@if (Model.Sent != null && Model.Sent.Any())
+{
+    <h4>Wysłane wiadomości:</h4>
+
+    <div class="container">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Tytuł</th>
+                    <th scope="col">Treść</th>
+                    <th scope="col">Do kogo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var message in Model.Sent)
+                {
+                    <tr>
+                    <td>@message.Title</td>
+                    <td>@message.Message</td>
+                    <td>@message.ReceiverEmail</td>
+                </tr>
+                }                
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <h4>Brak wysłanych wiadomości.</h4>
+}

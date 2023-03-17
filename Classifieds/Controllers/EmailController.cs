@@ -44,7 +44,8 @@ namespace Classifieds.Controllers
             }
             catch
             {
-                return View();
+                TempData["Message"] = "Wystąpił błąd podczas wysyłania wiadomości.";
+                return Redirect(returnUrl);
             }
         }
     }

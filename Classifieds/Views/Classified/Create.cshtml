@@ -108,7 +108,7 @@
 {
     <script type="text/javascript">        
 
-        var maxFileSize = 200 * 1024;
+        var maxFileSize = 500 * 1024;
         var maxNumberOfProductImages = 5;
         var allowedExtensions = ['jpeg', 'jpg', 'png'];
         var thumbnailInput = document.getElementById('thumbnailInput');
@@ -229,11 +229,9 @@
         }
 
         function validateImage() {
-            if (!ThumbnailInput.value && classifiedId == 0) {
-                $('#alertEmptyThumbnail').attr("class", "d-block p-2");
-                $('html, body').animate({
-                    scrollTop: 0
-                }, 'slow');
+            
+            if (!thumbnailInput.value && classifiedId == 0) {
+                $('#alertEmptyThumbnail').attr("class", "d-block p-2");                
             }
             else {
                 $('#alertEmptyThumbnail').attr("class", "d-none");

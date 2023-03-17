@@ -3,6 +3,7 @@ using Classifieds.Core.Email;
 using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Services;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Classifieds.Persistence.Services
@@ -18,11 +19,13 @@ namespace Classifieds.Persistence.Services
             _configuration = configuration;
             _unitOfWork = unitOfWork;
         }
+
         public void SaveToDatabase(Email email)
         {
             _unitOfWork.EmailRepository.SaveToDatabase(email);
             _unitOfWork.Complete();
         }
+
         public async Task SendEmail(Email emailParams)
         {
             var body = GenerateHtml(emailParams);
@@ -37,6 +40,17 @@ namespace Classifieds.Persistence.Services
             });
             await email.Send(emailParams.Title, body, emailParams.ReceiverEmail);
         }
+
+        public IEnumerable<Email> GetReceived(string userId)
+        {
+            return _unitOfWork.EmailRepository.GetReceived(userId);
+        }
+        public IEnumerable<Email> GetSent(string userId)
+        {
+            return _unitOfWork.EmailRepository.GetSent(userId);
+
+        }
+
         private string GenerateHtml(Email email)
         {
             return $"<p>{email.Message}</p><br /><h4>Nadawca: {email.SenderEmail}</h4>";

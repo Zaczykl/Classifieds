@@ -27,6 +27,7 @@ namespace Classifieds.Areas.Identity.Pages.Account.Manage
         public static string ManageClassified => "ManageClassified";
 
         public static string ManageClassifiedInactive => "ManageClassifiedInactive";
+        public static string Messages => "Messages";
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
@@ -47,6 +48,8 @@ namespace Classifieds.Areas.Identity.Pages.Account.Manage
         public static string ManageClassifiedNavClass(ViewContext viewContext) => PageNavClass(viewContext, ManageClassified);
 
         public static string ManageClassifiedInactiveNavClass(ViewContext viewContext) => PageNavClass(viewContext, ManageClassifiedInactive);
+
+        public static string MessagesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Messages);
 
         private static string PageNavClass(ViewContext viewContext, string page)
         {
