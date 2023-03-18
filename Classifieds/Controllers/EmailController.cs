@@ -5,6 +5,7 @@ using Classifieds.Persistence.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace Classifieds.Controllers
@@ -14,11 +15,13 @@ namespace Classifieds.Controllers
     {
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
-        
-        public EmailController(IUserService userService, IEmailService emailService)
+        private readonly ILogger _logger;
+
+        public EmailController(IUserService userService, IEmailService emailService, ILogger<EmailController> logger)
         {
             _userService = userService;
             _emailService = emailService;
+            _logger = logger;
         }
         
         public ActionResult Write(string title, string receiverEmail)
@@ -26,6 +29,7 @@ namespace Classifieds.Controllers
             var userId = User.GetUserId();
             var user = _userService.Get(userId);
             var email = new Email { Title = title, ReceiverEmail = receiverEmail, SenderEmail = user.Email };
+
             ViewData["ReturnUrl"] = HttpContext.Request.Headers["Referer"].ToString();
 
             return View(email);
@@ -40,11 +44,13 @@ namespace Classifieds.Controllers
                 await _emailService.SendEmail(email);
                 _emailService.SaveToDatabase(email);
                 TempData["Message"] = "Wiadomość została wysłana.";
+
                 return Redirect(returnUrl);
             }
             catch
             {
                 TempData["Message"] = "Wystąpił błąd podczas wysyłania wiadomości.";
+                _logger.LogError("Błąd podczas wysyłania e-mail");
                 return Redirect(returnUrl);
             }
         }

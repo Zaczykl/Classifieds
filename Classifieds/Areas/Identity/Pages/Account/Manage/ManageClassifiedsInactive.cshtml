@@ -6,7 +6,10 @@
 }
 
 
-<h4>@ViewData["Title"]</h4>
+<h4>
+    <img src="/Images/Icons/Inactive.png">
+    @ViewData["Title"]
+</h4>
 
 @if (Model.ClassifiedsInactive != null && Model.ClassifiedsInactive.Any())
 {
@@ -15,12 +18,10 @@
         <div class="row">
             <div class="col-9 mb-2">
                 <a href="@Url.Action("Display", "Classified",new { classifiedId = classified.Id })">
-                <div class="bg-light border text-center p-2">
-                    
+                    <div class="bg-white rounded border text-center p-2">                    
                         <p class="mt-2 text-truncate">@classified.Title</p>
-                        <img height="200" style="max-width: 90%;" src="@classified.ProductImages.Single(x=>x.Thumbnail).ImageUrl" />
-                    
-                </div>
+                        <img height="200" style="max-width: 90%;" src="@classified.ProductImages.Single(x=>x.Thumbnail).ImageUrl" />                    
+                    </div>
                 </a>
             </div>
             <div class="col-3">
@@ -44,7 +45,7 @@
 }
 else
 {
-    <h2>Brak nieaktywnych ogłoszeń.</h2>
+    <h5>Brak nieaktywnych ogłoszeń.</h5>
 }
 
 @section scripts

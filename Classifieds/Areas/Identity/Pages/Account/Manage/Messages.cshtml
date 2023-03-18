@@ -7,10 +7,13 @@
 
 @if (Model.Received != null && Model.Received.Any())
 {
-    <h4>Otrzymane wiadomości:</h4>
+    <h4>
+        <img src="/Images/Icons/Messages.png">
+        Otrzymane wiadomości:
+    </h4>
 
-    <div class="container">
-        <table class="table">
+    <div class="container bg-white rounded border">
+        <table class="table p-3">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Tytuł</th>
@@ -33,15 +36,18 @@
 }
 else
 {
-    <h4>Brak otrzymanych wiadomości.</h4>
+    <h5>Brak otrzymanych wiadomości.</h5>
 }
 <br />
 @if (Model.Sent != null && Model.Sent.Any())
 {
-    <h4>Wysłane wiadomości:</h4>
+    <h4>
+        <img src="/Images/Icons/Messages.png">
+        Wysłane wiadomości:
+    </h4>
 
-    <div class="container">
-        <table class="table">
+    <div class="container bg-white rounded border">
+        <table class="table p-3">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Tytuł</th>
@@ -64,5 +70,5 @@ else
 }
 else
 {
-    <h4>Brak wysłanych wiadomości.</h4>
+    <h5>Brak wysłanych wiadomości.</h5>
 }

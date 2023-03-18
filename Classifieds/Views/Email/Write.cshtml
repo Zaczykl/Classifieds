@@ -9,20 +9,21 @@
     @Html.HiddenFor(x=>x.ReceiverEmail)
     @Html.HiddenFor(x=>x.SenderEmail)
     @Html.Hidden("returnUrl", ViewData["ReturnUrl"])
-
-    <div class="col-md-9">
-        <div>
-            @Html.LabelFor(x => x.Title)
-            @Html.TextBoxFor(x => x.Title, new { @class = "form-control", required="required" })
-        </div>
-        <div class="mt-2">
-            @Html.LabelFor(x => x.Message)
-            @Html.TextAreaFor(x=>x.Message, new { @class = "form-control", required="required", wrap = "soft", rows = "10" })
-        </div>
-        <div class="text-center mt-2">
-            <button type="submit" class="btn btn-primary">
-                Wyślij
-            </button>            
+    <div class="col-md-9 bg-white rounded border">
+        <div class="p-3">
+            <div>
+                @Html.LabelFor(x => x.Title)
+                @Html.TextBoxFor(x => x.Title, new { @class = "form-control", required="required" })
+            </div>
+            <div class="mt-2">
+                @Html.LabelFor(x => x.Message)
+                @Html.TextAreaFor(x=>x.Message, new { @class = "form-control", required="required", wrap = "soft", rows = "10" })
+            </div>
+            <div class="text-center mt-2">
+                <button type="submit" class="btn btn-primary">
+                    Wyślij
+                </button>            
+            </div>
         </div>
     </div>
 }

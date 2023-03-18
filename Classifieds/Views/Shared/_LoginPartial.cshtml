@@ -7,21 +7,21 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Twoje Menu</a>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="/Images/Icons/Menu.png"> Menu</a>
         </li>
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-dark">Wyloguj</button>
+                <button type="submit" class="nav-link btn btn-link text-dark"><img src="/Images/Icons/Logout.png"> Wyloguj</button>
             </form>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Rejestracja</a>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register"><img src="/Images/Icons/Register.png" height="24">Rejestracja</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Zaloguj</a>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login"><img src="/Images/Icons/Login.png" height="24">Zaloguj</a>
         </li>
     }
 </ul>

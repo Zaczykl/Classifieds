@@ -1,15 +1,13 @@
 ﻿@model ErrorViewModel
 @{
-    ViewData["Title"] = "Błąd";
+    ViewData["Title"] = "Przepraszamy, coś poszło nie tak.";
 }
 
-<h2 class="text-danger">Przepraszamy. Coś poszło nie tak.</h2>
+<h2 class="text-danger">
+    <img src="/Images/Icons/Error.png">
+    Przepraszamy. Coś poszło nie tak.
+</h2>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-       
-}
-
+<h3>
+@ViewBag.ExceptionMessage
+</h3>
