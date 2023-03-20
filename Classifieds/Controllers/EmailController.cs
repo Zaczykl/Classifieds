@@ -24,11 +24,11 @@ namespace Classifieds.Controllers
             _logger = logger;
         }
         
-        public ActionResult Write(string title, string receiverEmail)
+        public ActionResult Write(string title, string receiverEmail, int classifiedId)
         {            
             var userId = User.GetUserId();
             var user = _userService.Get(userId);
-            var email = new Email { Title = title, ReceiverEmail = receiverEmail, SenderEmail = user.Email };
+            var email = new Email { Title = title, ReceiverEmail = receiverEmail, SenderEmail = user.Email, ClassifiedId = classifiedId };
 
             ViewData["ReturnUrl"] = HttpContext.Request.Headers["Referer"].ToString();
 

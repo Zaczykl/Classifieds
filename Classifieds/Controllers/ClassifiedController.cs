@@ -10,6 +10,7 @@ using Classifieds.Core.Services;
 using System;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Classifieds.Controllers
 {
@@ -33,15 +34,21 @@ namespace Classifieds.Controllers
         }
 
         public IActionResult Display(int classifiedId)
-        { 
-            var classified = _classifiedService.GetClassified(classifiedId);
+        {
+            try
+            {
+                var classified = _classifiedService.GetClassified(classifiedId);
+                _classifiedService.GetImagesUrls(classified);
 
-            _classifiedService.GetImagesUrls(classified);
+                if (TempData["Message"] != null)
+                    ViewBag.Message = TempData["Message"].ToString();
 
-            if (TempData["Message"] != null)
-                ViewBag.Message = TempData["Message"].ToString();
-
-            return View(classified);
+                return View(classified);
+            }
+            catch (InvalidOperationException)
+            {
+                return RedirectToAction("Deleted");
+            }
         }
 
         [Authorize]
@@ -64,6 +71,11 @@ namespace Classifieds.Controllers
             };
 
             return View(vm);            
+        }
+
+        public IActionResult Deleted()
+        { 
+            return View();
         }
 
         [Authorize]

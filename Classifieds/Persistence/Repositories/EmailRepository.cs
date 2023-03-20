@@ -21,12 +21,12 @@ namespace Classifieds.Persistence.Repositories
         public IEnumerable<Email> GetReceived(string userId)
         {
             var userEmail = _context.Users.Single(x => x.Id == userId).Email;
-            return _context.Emails.Where(x=>x.ReceiverEmail== userEmail);
+            return _context.Emails.Where(x => x.ReceiverEmail == userEmail).OrderByDescending(x=>x.Id);
         }
         public IEnumerable<Email> GetSent(string userId)
         {
             var userEmail = _context.Users.Single(x => x.Id == userId).Email;
-            return _context.Emails.Where(x => x.SenderEmail == userEmail);
+            return _context.Emails.Where(x => x.SenderEmail == userEmail).OrderByDescending(x => x.Id);
         }
     }
 }

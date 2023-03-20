@@ -25,8 +25,8 @@
                 @foreach (var message in Model.Received)
                 {
                     <tr>
-                        <td>@message.Title</td>
-                        <td>@message.Message</td>
+                        <td><a href="@Url.Action("Display", "Classified",new { classifiedId = message.ClassifiedId })">@message.Title</a></td>
+                        <td>@message.Message</td>                        
                         <td>@message.SenderEmail</td>
                     </tr>
                 }
@@ -59,7 +59,7 @@ else
                 @foreach (var message in Model.Sent)
                 {
                     <tr>
-                    <td>@message.Title</td>
+                        <td><a href="@Url.Action("Display", "Classified",new { classifiedId = message.ClassifiedId })">@message.Title</a></td>
                     <td>@message.Message</td>
                     <td>@message.ReceiverEmail</td>
                 </tr>
