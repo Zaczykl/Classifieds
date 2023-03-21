@@ -13,6 +13,7 @@
 
 @if (Model.ClassifiedsInactive != null && Model.ClassifiedsInactive.Any())
 {
+    <div class="container">
     @foreach (var classified in Model.ClassifiedsInactive)
     {
         <div class="row">
@@ -40,8 +41,8 @@
 
             </div>
         </div>
-
     }
+    </div>
 }
 else
 {

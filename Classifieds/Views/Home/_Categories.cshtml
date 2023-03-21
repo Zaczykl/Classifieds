@@ -6,9 +6,9 @@
 
 <div class="container d-flex justify-content-between mt-3">
 
-    <div id="clickable" class="text-center clickable">
+    <div class="text-center clickable">
         <a onclick="filterCategory(1)">
-            <img src="Images/Categories/Board.png" height="100">
+            <img src="Images/Categories/Board.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==1).Name</p>
         </a>
     </div>
@@ -16,30 +16,29 @@
 
     <div class="text-center clickable">
         <a onclick="filterCategory(2)">
-            <img src="Images/Categories/RPG.png" height="100">
+            <img src="Images/Categories/RPG.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==2).Name</p>
         </a>
     </div>
 
     <div class="text-center clickable">
         <a onclick="filterCategory(3)">
-            <img src="Images/Categories/Card.png" height="100">
+            <img src="Images/Categories/Card.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==3).Name</p>
         </a>
     </div>
 
     <div class="text-center clickable">
         <a onclick="filterCategory(5)">
-            <img src="Images/Categories/Kids.png" height="100">
+            <img src="Images/Categories/Kids.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==5).Name</p>
         </a>
     </div>
 
     <div class="text-center clickable">
         <a onclick="filterCategory(4)">
-            <img src="Images/Categories/Puzzle.png" height="100">
+            <img src="Images/Categories/Puzzle.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==4).Name</p>
         </a>
     </div>
-
 </div>
