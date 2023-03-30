@@ -1,23 +1,23 @@
 ﻿@model IEnumerable<Classifieds.Core.Models.Domains.Classified>
 <div id="classifiedsPartial">
-    <div class="text-center mt-5 mb-3">
+    <div class="text-center mt-3 mb-3">
         <h1>Ogłoszenia</h1>
     </div>
 
-    <div class="container mt-5">
+    <div class="container mt-3">
         <div class="row">
             @if (Model!=null && Model.Any()) {
                @foreach (var classified in Model)
                 {
-                        <div class="col-lg-3 mb-3">                            
-                            <a href="@Url.Action("Display", "Classified",new { classifiedId = classified.Id })">
-                            <div class="bg-white rounded border text-center">
-                                <p class="mt-2 text-truncate">@classified.Title</p>
+                    <div class="col-lg-3 mb-3">
+                        <a href="@Url.Action("Display", "Classified",new { classifiedId = classified.Id })" class="anchorUnstyled">
+                        <div class="bg-white rounded border text-center">
+                            <p class="mt-2 text-truncate">@classified.Title</p>
                                 <img height="200" style="max-width: 90%;" src="@classified.ProductImages.Single(x=>x.Thumbnail).ImageUrl" />
-                                <p class="mt-2">@classified.Price zł</p>
-                            </div>
-                            </a>                            
-                        </div>                    
+                            <p class="mt-2 bold">@classified.Price zł</p>
+                        </div>
+                        </a>                            
+                    </div>                    
                 }
             }
             else {

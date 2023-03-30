@@ -1,40 +1,42 @@
-﻿using Classifieds.Core;
+﻿using Azure.Storage.Blobs;
+using Classifieds.Core;
 using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Services;
 using Classifieds.Core.ViewModels;
-using Classifieds.Persistence.Extensions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace Classifieds.Persistence.Services
 {
     public class ClassifiedService : IClassifiedService
     {
-        IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _config;
+        private const int MaxImageSizeToCloudUpload = 256 * 1024;
+        private const int MaxImageHeightToCloudUpload = 600;
 
-        public ClassifiedService(IUnitOfWork unitOfWork)
+        public ClassifiedService(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
+            _config = configuration;
         }
 
         public Classified GetClassified(int id)
         {
-
             return _unitOfWork.ClassifiedRepository.GetClassified(id);
         }
 
         public IEnumerable<Classified> GetClassifieds(FilterClassifieds classifiedParams)
         {
             var classifieds = _unitOfWork.ClassifiedRepository.GetClassifieds(classifiedParams);
-            GetThumbnailsUrls(classifieds);
             return classifieds;
         }
         
@@ -53,8 +55,7 @@ namespace Classifieds.Persistence.Services
                 default: 
                     return classifiedsToSort;
             }
-        }
-        
+        }        
 
         public void Add(Classified classified)
         {
@@ -87,28 +88,31 @@ namespace Classifieds.Persistence.Services
             _unitOfWork.Complete();
         }
 
-        public async Task AttachPhotosToClassifiedAsync(CreateClassifiedViewModel vm)
-        {
-            
+        public void AttachImagesToClassified(CreateClassifiedViewModel vm)
+        {            
             if (vm.ThumbnailChanged)
             {
                 var thumbnailParams = new ProductImageParams { Classified = vm.Classified, File = vm.File, UserId = vm.Classified.UserId, Thumbnail = true };
-                await AttachImageToClassified(thumbnailParams);
+                AttachImage(thumbnailParams);
             }
 
-            if (vm.ImagesChanged)
+            if (vm.ImagesChanged && vm.Files != null)
             {
-                var productImageParams = new ProductImageParams { Classified = vm.Classified, UserId = vm.Classified.UserId };
-
-                if (vm.Files == null)
-                    return;
+                var productImageParams = new ProductImageParams { Classified = vm.Classified, UserId = vm.Classified.UserId };                
 
                 foreach (var productImage in vm.Files)
                 {
                     productImageParams.File = productImage;
-                    await AttachImageToClassified(productImageParams);
+                    AttachImage(productImageParams);
                 }
             }            
+        }
+
+        private void AttachImage(ProductImageParams productImageParams)
+        {
+            var imageUrl = uploadImage(productImageParams.File);            
+            ProductImage productImage = new ProductImage { ImageUrl= imageUrl, UserId = productImageParams.UserId, Thumbnail = productImageParams.Thumbnail };
+            productImageParams.Classified.ProductImages.Add(productImage);
         }
 
         public void convertPrice(Classified classified, string formattedPrice)
@@ -117,43 +121,75 @@ namespace Classifieds.Persistence.Services
             classified.Price = price;
         }
 
-        private async Task AttachImageToClassified(ProductImageParams productImageParams)
+        private string GenerateFileName(string fileName)
         {
-            var productImage = new ProductImage { Image = await productImageParams.File.GetBytesAsync(), UserId = productImageParams.UserId, Thumbnail = productImageParams.Thumbnail };
-            productImageParams.Classified.ProductImages.Add(productImage);
-        }
-
-        public void GetThumbnailsUrls(IEnumerable<Classified> classifieds)
-        {
-            foreach (var classified in classifieds)
+            try
             {
-                var thumbnail = classified.ProductImages.Single(x => x.Thumbnail);
-                GetImageUrl(thumbnail);
+                string strFileName = string.Empty;
+                string[] strName = fileName.Split('.');
+                strFileName = "classifieds" + "/"
+                   + DateTime.Now.ToUniversalTime().ToString("yyyyMMdd\\THHmmssfff") + "." +
+                   strName[strName.Length - 1];
+                return strFileName;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
             }
         }
 
-        public void GetImagesUrls(Classified classified)
+        private string uploadImage(IFormFile file)
         {
-            foreach (var item in classified.ProductImages)
+            try
             {
-                GetImageUrl(item);
+                string filename = GenerateFileName(file.FileName);
+                string fileUrl = "";
+                string connectionString = _config.GetConnectionString("BlobConnection");
+                BlobContainerClient container = new BlobContainerClient(connectionString, "images");
+                BlobClient blob = container.GetBlobClient(filename);
+                using (Stream stream = file.OpenReadStream())
+                {
+                    using (Stream imageResized = ResizeImage(stream, MaxImageHeightToCloudUpload, MaxImageSizeToCloudUpload))
+                    {
+                        blob.Upload(imageResized);
+                        fileUrl = blob.Uri.AbsoluteUri;
+                    }
+                }
+                return fileUrl;
+            }
+            catch (Exception ex)
+            {
+                return ex.StackTrace;
             }
         }
 
-        public string GetImageUrl(ProductImage image)
-        {
-            var imageBase64 = Convert.ToBase64String(image.Image);
-            image.ImageUrl = $"data:image/jpeg;base64,{imageBase64}";
-            return image.ImageUrl;
-        }
-
-        public string GetThumbnailUrl(Classified classified)
-        {
-            if (classified.ProductImages.Count == 0)
-                return string.Empty;
-
-            var image= classified.ProductImages.Single(x => x.Thumbnail);            
-            return GetImageUrl(image);
+        private Stream ResizeImage(Stream stream, int maxHeight, int maxSize)
+        {            
+            try
+            {                
+                using (var image = Image.Load(stream))
+                {
+                    if (image.Height > maxHeight || stream.Length > maxSize)
+                    {                        
+                        var options = new ResizeOptions
+                        {
+                            Size = new Size(maxHeight, maxHeight),
+                            Mode = ResizeMode.Max,
+                        };
+                        image.Mutate(x => x.Resize(options));                        
+                        var outputStream = new MemoryStream();
+                        image.Save(outputStream, new JpegEncoder());
+                        outputStream.Seek(0, SeekOrigin.Begin);
+                        return outputStream;
+                    }
+                }
+                stream.Seek(0, SeekOrigin.Begin);
+                return stream;
+            }
+            catch (Exception)
+            {                
+                return null;
+            }
         }
     }
 }

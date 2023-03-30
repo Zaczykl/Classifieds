@@ -16,6 +16,7 @@ namespace Classifieds.Persistence.Repositories
         {
             return _context.Passwords.First();
         }
+
         public void Add(PasswordData passwordData)
         {
             _context.Passwords.Add(passwordData);

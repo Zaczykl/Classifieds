@@ -10,15 +10,15 @@ using Classifieds.Core.Services;
 using System;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
 
 namespace Classifieds.Controllers
 {
     public class ClassifiedController : Controller
     {
-        private ICategoryService _categoryService;
-        private IClassifiedService _classifiedService;
-        private IUserService _userService;
+        private readonly ICategoryService _categoryService;
+        private readonly IClassifiedService _classifiedService;
+        private readonly IUserService _userService;
         private readonly ILogger _logger;
 
         public ClassifiedController(
@@ -38,7 +38,6 @@ namespace Classifieds.Controllers
             try
             {
                 var classified = _classifiedService.GetClassified(classifiedId);
-                _classifiedService.GetImagesUrls(classified);
 
                 if (TempData["Message"] != null)
                     ViewBag.Message = TempData["Message"].ToString();
@@ -66,7 +65,7 @@ namespace Classifieds.Controllers
             {
                 Classified = classified,
                 Categories = _categoryService.GetCategories(),
-                thumbnailUrl = _classifiedService.GetThumbnailUrl(classified),
+                thumbnailUrl = classified.ProductImages.FirstOrDefault() == null ? string.Empty : classified.ProductImages.First().ImageUrl,
                 FormattedPrice = classified.Id == 0 ? string.Empty : classified.Price.ToString("N2", CultureInfo.InvariantCulture)
             };
 
@@ -81,7 +80,7 @@ namespace Classifieds.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateClassifiedViewModel vm)
+        public IActionResult Create(CreateClassifiedViewModel vm)
         {                       
             if (!ModelState.IsValid || (vm.ThumbnailChanged && !IsValidFile(vm.File)) || !AreValidFiles(vm.Files))
                 return View("Create", vm);
@@ -92,23 +91,17 @@ namespace Classifieds.Controllers
             try
             {
                 _classifiedService.convertPrice(vm.Classified, vm.FormattedPrice);
-            
+                _classifiedService.AttachImagesToClassified(vm);
                 if (vm.Classified.Id == 0)
-                {
-                    await _classifiedService.AttachPhotosToClassifiedAsync(vm);
+                {                    
                     _classifiedService.Add(vm.Classified);
                     TempData["Message"] = "Ogłoszenie zostało dodane.";
                 }
                 else
-                {
-                    if (vm.ImagesChanged || vm.ThumbnailChanged)
-                    {
-                        await _classifiedService.AttachPhotosToClassifiedAsync(vm);
-                    }
+                {                                            
                     _classifiedService.Update(vm);
                     TempData["Message"] = "Ogłoszenie zostało edytowane.";
-                }
-            
+                }            
                 _userService.UpdateContactNumber(userId, vm.Classified.ContactNumber);
             
                 return RedirectToAction("Index", "Home");

@@ -8,6 +8,7 @@
             Iv = iv;
             EncryptedPassword = encryptedPassword;
         }
+
         public byte[] Key { get; }
         public byte[] Iv { get;}
         public byte[] EncryptedPassword { get; }

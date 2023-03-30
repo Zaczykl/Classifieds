@@ -1,10 +1,7 @@
 ﻿using Classifieds.Core;
-using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Services;
 using Classifieds.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Classifieds.Controllers
 {
@@ -22,7 +19,7 @@ namespace Classifieds.Controllers
         public IActionResult Index()
         {            
             var categories = _categoryService.GetCategories();
-            var classifieds = _classifiedService.GetClassifieds(new FilterClassifieds { Active = true });         
+            var classifieds = _classifiedService.GetClassifieds(new FilterClassifieds { Active = true });
             var vm = new HomePageViewModel { Categories = categories, Classifieds = classifieds, SortClassifieds=new SortClassifieds()};
 
             if (TempData["Message"] != null)
@@ -30,14 +27,13 @@ namespace Classifieds.Controllers
             return View(vm);
         }
 
+        [HttpPost]
         public IActionResult FilterClassifieds(string title,int categoryId, string sortBy)
-        {
-            IEnumerable<Classified> classifieds = _classifiedService.GetClassifieds(new FilterClassifieds { Title = title, categoryId = categoryId, Active = true });
+        {            
+            var classifieds = _classifiedService.GetClassifieds(new FilterClassifieds { Title = title, categoryId = categoryId, Active = true });
             classifieds = _classifiedService.SortClassifieds(sortBy, classifieds);
 
             return PartialView("_Classifieds", classifieds);
-        }
-
-        
+        }        
     }
 }

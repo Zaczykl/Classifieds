@@ -17,6 +17,7 @@ namespace Classifieds.Persistence.Repositories
         {
             return _context.Users.Single(x => x.Id == userId);
         }
+
         public void UpdateContactNumber(string userId, string contactNumber)
         {
             _context.Users.Single(x => x.Id == userId).PhoneNumber = contactNumber;

@@ -22,7 +22,6 @@ namespace Classifieds.Areas.Identity.Pages.Account.Manage
         {
             string userId = User.GetUserId();
             Classifieds = _classifiedService.GetClassifieds(new FilterClassifieds { UserId = userId, Active = true });
-            _classifiedService.GetThumbnailsUrls(Classifieds);            
         }
     }
 }

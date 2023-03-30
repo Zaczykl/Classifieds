@@ -16,10 +16,7 @@ namespace Classifieds.Core.Services
         void Activate(int id, string userId);
         void Deactivate(int id, string userId);        
         void Delete(int id, string userId);
-        void GetThumbnailsUrls(IEnumerable<Classified> classifieds);
-        void GetImagesUrls(Classified classified);
-        string GetThumbnailUrl(Classified classified);
-        Task AttachPhotosToClassifiedAsync(CreateClassifiedViewModel viewModel);
+        void AttachImagesToClassified(CreateClassifiedViewModel viewModel);
         void convertPrice(Classified classified, string formattedPrice);
         
     }

@@ -4,7 +4,6 @@ using System.Net.Mime;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System;
 
 namespace Classifieds.Core.Email
 {

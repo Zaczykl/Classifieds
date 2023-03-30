@@ -7,17 +7,21 @@
     }
 }
 
-<form id="filterForm" class="row align-items-center">
-    <div class="row col-9">
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary">Szukaj</button>
+<form id="filterForm" class="container">
+    <div class="row justify-content-between">
+        <div class="col-12 col-md-7 mb-2">
+            <div class="row">
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Szukaj</button>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="titleTextbox" placeholder="Szukaj ogłoszeń">
+                </div>
+            </div>
         </div>
-        <div class="col">
-            <input type="text" class="form-control" id="titleTextbox" placeholder="Szukaj ogłoszeń po tytule">
+        <div class="col-12 col-md-5">
+            @Html.DropDownListFor(x=>x.SortClassifieds.SortBy,Model.SortClassifieds.SortOptions,"Sortowanie",new { @class = "form-control", @id="sortDropdown", onchange="searchClassifieds()"})
         </div>
-    </div>
-    <div class="col-3">
-        @Html.DropDownListFor(x=>x.SortClassifieds.SortBy,Model.SortClassifieds.SortOptions,"Sortowanie",new { @class = "form-control", @id="sortDropdown", onchange="searchClassifieds()"})
     </div>
 </form>
 
@@ -41,7 +45,7 @@
 
         var categoryId = 0;
         var title = String();
-
+        
         function filter(title, id) {
             var sortBySelectedVal = $('#sortDropdown').val();
             $('#loading').attr("class", "d-block");

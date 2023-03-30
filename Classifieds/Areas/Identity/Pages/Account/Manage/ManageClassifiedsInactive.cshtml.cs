@@ -22,7 +22,6 @@ namespace Classifieds.Areas.Identity.Pages.Account.Manage
         {
             string userId = User.GetUserId();
             ClassifiedsInactive = _classifiedService.GetClassifieds(new FilterClassifieds { UserId = userId });
-            _classifiedService.GetThumbnailsUrls(ClassifiedsInactive);            
         }
     }
 }

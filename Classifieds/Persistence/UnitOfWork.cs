@@ -15,8 +15,8 @@ namespace Classifieds.Persistence
             UserRepository = new UserRepository(context);
             PasswordRepository = new PasswordRepository(context);
             EmailRepository = new EmailRepository(context);
-
         }
+
         public ICategoryRepository CategoryRepository { get; set; }
         public IClassifiedRepository ClassifiedRepository { get; set; }
         public IUserRepository UserRepository { get; set; }

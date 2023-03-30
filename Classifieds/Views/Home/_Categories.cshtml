@@ -1,44 +1,42 @@
 ﻿@model IEnumerable<Classifieds.Core.Models.Domains.Category>
 
-<div class="text-center mt-5">
+<div class="text-center mt-3">
     <h1>Kategorie</h1>
 </div>
 
-<div class="container d-flex justify-content-between mt-3">
-
-    <div class="text-center clickable">
-        <a onclick="filterCategory(1)">
+<div class="container d-flex justify-content-between mt-3 mb-3">
+    <a class="anchorCategories rounded" onclick="filterCategory(1)">
+        <div class="text-center clickable p-2">       
             <img src="Images/Categories/Board.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==1).Name</p>
-        </a>
-    </div>
-    
+        </div>
+    </a>
 
-    <div class="text-center clickable">
-        <a onclick="filterCategory(2)">
+    <a class="anchorCategories rounded" onclick="filterCategory(2)">
+        <div class="text-center clickable p-2">
             <img src="Images/Categories/RPG.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==2).Name</p>
-        </a>
-    </div>
+        </div>
+    </a>
 
-    <div class="text-center clickable">
-        <a onclick="filterCategory(3)">
+    <a class="anchorCategories rounded" onclick="filterCategory(3)">
+        <div class="text-center clickable p-2">
             <img src="Images/Categories/Card.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==3).Name</p>
-        </a>
-    </div>
+        </div>
+    </a>
 
-    <div class="text-center clickable">
-        <a onclick="filterCategory(5)">
+    <a class="anchorCategories rounded" onclick="filterCategory(5)">
+        <div class="text-center clickable p-2">
             <img src="Images/Categories/Kids.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==5).Name</p>
-        </a>
-    </div>
+        </div>
+    </a>
 
-    <div class="text-center clickable">
-        <a onclick="filterCategory(4)">
+    <a class="anchorCategories rounded" onclick="filterCategory(4)">
+        <div class="text-center clickable p-2">
             <img src="Images/Categories/Puzzle.png" style="max-width: 80%;">
             <p>@Model.Single(x=>x.Id==4).Name</p>
-        </a>
-    </div>
+        </div>
+    </a>
 </div>

@@ -1,7 +1,6 @@
 ﻿using Classifieds.Core;
 using Classifieds.Core.Models.Domains;
 using Classifieds.Core.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace Classifieds.Persistence.Services
 {

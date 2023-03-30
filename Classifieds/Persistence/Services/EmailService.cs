@@ -10,12 +10,10 @@ namespace Classifieds.Persistence.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IPasswordService _passwordService;
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
-        public EmailService(IPasswordService passwordService, IConfiguration configuration, IUnitOfWork unitOfWork)
+        public EmailService(IConfiguration configuration, IUnitOfWork unitOfWork)
         {
-            _passwordService = passwordService;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
         }
@@ -36,7 +34,7 @@ namespace Classifieds.Persistence.Services
                 EnableSsl = _configuration.GetValue<bool>("EmailSettings:EnableSsl"),
                 SenderName = emailParams.SenderEmail,
                 SenderEmail = _configuration.GetValue<string>("EmailSettings:SenderEmail"),
-                SenderEmailPassword = _passwordService.GetPassword()
+                SenderEmailPassword = _configuration.GetValue<string>("EmailSettings:SenderEmailPassword")
             });
             await email.Send(emailParams.Title, body, emailParams.ReceiverEmail);
         }
@@ -48,7 +46,6 @@ namespace Classifieds.Persistence.Services
         public IEnumerable<Email> GetSent(string userId)
         {
             return _unitOfWork.EmailRepository.GetSent(userId);
-
         }
 
         private string GenerateHtml(Email email)

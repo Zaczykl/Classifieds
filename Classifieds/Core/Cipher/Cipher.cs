@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Security.Cryptography;
 
 namespace Classifieds.Core.Cipher

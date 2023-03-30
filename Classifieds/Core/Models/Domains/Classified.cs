@@ -11,6 +11,7 @@ namespace Classifieds.Core.Models.Domains
         private const int _titleMaxLength = 50;
         private const int _descriptionMinLength = 15;
         private const int _descriptionMaxLength = 2000;
+
         public Classified()
         {
             ProductImages = new Collection<ProductImage>();

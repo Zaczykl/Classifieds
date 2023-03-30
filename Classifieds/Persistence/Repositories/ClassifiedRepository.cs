@@ -18,10 +18,11 @@ namespace Classifieds.Persistence.Repositories
 
         public Classified GetClassified(int id)
         {
-            var classified = _context.Classifieds.Include(x => x.ProductImages).Single(x => x.Id == id);
+            var classified = _context.Classifieds.Include(x => x.ProductImages).First(x => x.Id == id);
             classified.User = _context.Users.Single(x => x.Id == classified.UserId);
             return classified;
         }
+
         public IEnumerable<Classified> GetClassifieds(FilterClassifieds classifiedParams)
         {
             var classifieds = _context.Classifieds
@@ -34,9 +35,9 @@ namespace Classifieds.Persistence.Repositories
                     classifieds = classifieds.Where(x => x.Title.Contains(classifiedParams.Title));
                 if (classifiedParams.UserId != null)
                     classifieds = classifieds.Where(x => x.UserId == classifiedParams.UserId);
-            return classifieds
-                .Include(x => x.ProductImages)
+                classifieds = classifieds.Include(x => x.ProductImages.Where(p=>p.Thumbnail))
                 .OrderByDescending(x => x.Id);
+            return classifieds;
         }
 
         public void Add(Classified classified)
@@ -58,7 +59,7 @@ namespace Classifieds.Persistence.Repositories
             if (vm.ThumbnailChanged)
             {
                 var thumbnailToUpdate = _context.ProductImages.Single(x => x.ClassifiedId == vm.Classified.Id && x.Thumbnail);
-                thumbnailToUpdate.Image = vm.Classified.ProductImages.Single(x => x.Thumbnail).Image;
+                thumbnailToUpdate.ImageUrl = vm.Classified.ProductImages.Single(x => x.Thumbnail).ImageUrl;
             }
 
             if (vm.ImagesChanged)

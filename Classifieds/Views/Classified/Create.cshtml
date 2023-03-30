@@ -32,7 +32,7 @@
         </div>
         <div id="alertFileSize" class="d-none">
             <div class="alert alert-danger">
-                Maksymalny rozmiar pojedynczego pliku to 200kb. Proszę zmniejsz rozmiar plików.
+                Maksymalny rozmiar pojedynczego zdjęcia to 5 MB. Proszę zmniejsz rozmiar.
             </div>
         </div>
         <div id="alertEmptyThumbnail" class="d-none">
@@ -108,7 +108,7 @@
 {
     <script type="text/javascript">        
 
-        var maxFileSize = 500 * 1024;
+        var maxFileSize = 5 * 1024 * 1024;
         var maxNumberOfProductImages = 5;
         var allowedExtensions = ['jpeg', 'jpg', 'png'];
         var thumbnailInput = document.getElementById('thumbnailInput');
@@ -172,6 +172,9 @@
                     $('#alertFilesExcess').attr("class", "d-block p-2");
                     otherImagesInput.value = "";
                     return;
+                }
+                else {
+                    $('#alertFilesExcess').attr("class", "d-none");
                 }
 
                 fileExtension = file.name.split('.').pop().toLowerCase();
